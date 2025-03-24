@@ -34,9 +34,7 @@ AetherFlow/
 │   └── llm_client.py       # LLM integration
 ├── utils/
 │   └── logging_utils.py    # Logging utilities
-└── main.py                 # Application entry point
-
-'''
+└── main.py                 # Application entry point '''
 
 ## Setup
 

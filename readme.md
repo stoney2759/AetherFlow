@@ -77,14 +77,14 @@ Register your tool with the appropriate agents
 ## Configuration
 
 Configuration is handled through TOML files. See **config/example_config.toml** for a complete example.
-```
+    ```
     [api]
     provider = "openai"
     api_key = "your_api_key_here"
 
     [agents]
     # Agent-specific configurations
-```
+    ```
 
 ## License
     MIT License

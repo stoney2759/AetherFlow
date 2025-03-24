@@ -1,6 +1,3 @@
-Here's the raw markdown formatted version of the corrected README.md for easy copying and pasting:
-
-```markdown
 # AetherFlow
 
 AetherFlow is a modular framework for orchestrating AI agents with task routing, planning capabilities, and extensible tools. Designed for seamless agent collaboration and workflow automation.
@@ -14,7 +11,6 @@ AetherFlow is a modular framework for orchestrating AI agents with task routing,
 - **Configuration Management**: Simple TOML-based configuration
 
 ## Project Structure
-
 ```
 AetherFlow/
 ├── agents/                 # Agent implementations
@@ -50,55 +46,48 @@ AetherFlow/
    ```
 
 2. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
+    ```
+    pip install -r requirements.txt
+    ```
 
 3. Create your configuration:
-   ```
-   cp config/example_config.toml config/config.toml
-   ```
+    ```
+    cp config/example_config.toml config/config.toml
+    ```
 
-4. Edit `config/config.toml` with your settings
+4. Edit config/config.toml with your settings:
 
 ## Usage
-
 Run the main application:
-```
-python main.py
-```
+    ```
+    python main.py
+    
 
 ## Creating New Agents
 
-- Use the agent template in **agents/agent_template.py** as a starting point
-- Register your new agent in **config/agents_index.json**
-- Configure your agent in **config/config.toml**
+Use the agent template in **agents/agent_template.py** as a starting point
+Register your new agent in **config/agents_index.json**
+Configure your agent in **config/config.toml**
 
 ## Extending with New Tools
 
-- Subclass **base_tool.py** to create new capabilities
-- Register your tool with the appropriate agents
+Subclass **base_tool.py** to create new capabilities
+Register your tool with the appropriate agents
 
 ## Configuration
 
 Configuration is handled through TOML files. See **config/example_config.toml** for a complete example.
 
-```
-[api]
-provider = "openai"
-api_key = "your_api_key_here"
+    [api]
+    provider = "openai"
+    api_key = "your_api_key_here"
 
-[agents]
-# Agent-specific configurations
-```
+    [agents]
+    # Agent-specific configurations
+
 
 ## License
-
-MIT License
+    MIT License
 
 ## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-```
-
-You can simply copy this entire block and paste it into your README.md file. The formatting will display correctly on GitHub.
+    Contributions are welcome! Please feel free to submit a Pull Request.

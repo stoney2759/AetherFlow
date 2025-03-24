@@ -1,3 +1,6 @@
+# Log files
+logs/
+
 # Config files
 config/config.toml
 

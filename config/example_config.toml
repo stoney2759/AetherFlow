@@ -1,0 +1,33 @@
+# Debug settings
+[debug]
+debug_mode = false # Set to false to disable debug logging
+
+# Global LLM configuration
+[llm]
+model = "gpt-4o"                      # Default LLM model (Change as needed)
+base_url = "https://api.openai.com/v1"  # Set the API base URL for your LLM provider
+api_key = "sk-proj-"               # Replace with your actual API key
+max_tokens = 4096                      # Maximum token limit for responses
+temperature = 0.2                       # Controls randomness (Lower = More Deterministic)
+
+# Agent behavior settings
+[agent]
+max_iterations = 5                      # Max number of iterations an agent can run
+enable_planning = true                   # Enable planning agent for complex tasks
+
+# Logging settings
+[logging]
+level = "DEBUG"                         # Log level: DEBUG, INFO, WARNING, ERROR
+to_file = true                           # Log to a file in ./logs/ if set to true
+
+# External API configuration (if needed)
+[api]
+base_url = "https://api.openai.com/v1" # Example API Base URL
+api_key = "sk-proj-"                 # Example API Key for external integrations
+timeout = 30                             # Timeout for API requests in seconds
+
+[agent_promotion]
+usage_threshold = 50  # Minimum usage count for promotion
+success_rate_threshold = 85.0  # Minimum success rate (%)
+accuracy_score_threshold = 0.85  # Minimum accuracy score (0-1)
+

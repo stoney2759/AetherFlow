@@ -3,6 +3,7 @@ logs/
 
 # Config files
 config/config.toml
+sensitive-files.txt
 
 # Python
 __pycache__/

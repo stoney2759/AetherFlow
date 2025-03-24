@@ -6,6 +6,8 @@ config/config.toml
 sensitive-files.txt
 
 # Python
+# Exclude __init__.py files if needed
+__init__.py
 __pycache__/
 *.py[cod]
 *$py.class

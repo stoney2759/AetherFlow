@@ -1,15 +1,18 @@
-AetherFlow
+# AetherFlow
+
 AetherFlow is a modular framework for orchestrating AI agents with task routing, planning capabilities, and extensible tools. Designed for seamless agent collaboration and workflow automation.
-Features
 
-Agent Orchestration: Coordinate multiple AI agents working together on complex tasks
-Task Routing System: Intelligent distribution of tasks to specialized agents
-Planning Capabilities: Agents with planning abilities to break down complex problems
-Extensible Tool Framework: Easily integrate new capabilities through a flexible tool system
-Configuration Management: Simple TOML-based configuration
+## Features
 
-Project Structure
-CopyAetherFlow/
+- **Agent Orchestration**: Coordinate multiple AI agents working together on complex tasks
+- **Task Routing System**: Intelligent distribution of tasks to specialized agents
+- **Planning Capabilities**: Agents with planning abilities to break down complex problems
+- **Extensible Tool Framework**: Easily integrate new capabilities through a flexible tool system
+- **Configuration Management**: Simple TOML-based configuration
+
+## Project Structure
+'''
+AetherFlow/
 ├── agents/                 # Agent implementations
 │   ├── agent_core.py       # Core agent functionality
 │   ├── agent_creator_agent.py
@@ -32,43 +35,59 @@ CopyAetherFlow/
 ├── utils/
 │   └── logging_utils.py    # Logging utilities
 └── main.py                 # Application entry point
-Setup
 
-Clone the repository:
-bashCopygit clone https://github.com/stoney2759/AetherFlow.git
-cd AetherFlow
+'''
 
-Install dependencies:
-bashCopypip install -r requirements.txt
+## Setup
 
-Create your configuration:
-bashCopycp config/example_config.toml config/config.toml
+1. Clone the repository:
+   ```
+   git clone https://github.com/stoney2759/AetherFlow.git
+   cd AetherFlow
+   '''
 
-Edit config/config.toml with your settings.
+2. Install dependencies:
+    '''
+    pip install -r requirements.txt
+    '''
 
-Usage
+3. Create your configuration:
+    '''
+    cp config/example_config.toml config/config.toml
+    '''
+
+4. Edit config/config.toml with your settings:
+
+## Usage
 Run the main application:
-bashCopypython main.py
-Creating New Agents
+    '''
+    python main.py
+    '''
 
-Use the agent template in agents/agent_template.py as a starting point
-Register your new agent in config/agents_index.json
-Configure your agent in config/config.toml
+## Creating New Agents
 
-Extending with New Tools
+Use the agent template in **agents/agent_template.py** as a starting point
+Register your new agent in **config/agents_index.json**
+Configure your agent in **config/config.toml**
 
-Subclass base_tool.py to create new capabilities
+## Extending with New Tools
+
+Subclass **base_tool.py** to create new capabilities
 Register your tool with the appropriate agents
 
-Configuration
-Configuration is handled through TOML files. See config/example_config.toml for a complete example.
-tomlCopy[api]
-provider = "openai"
-api_key = "your_api_key_here"
+## Configuration
+Configuration is handled through TOML files. See **config/example_config.toml** for a complete example.
+    '''
+    [api]
+    provider = "openai"
+    api_key = "your_api_key_here"
 
-[agents]
-# Agent-specific configurations
-License
-MIT License
-Contributing
-Contributions are welcome! Please feel free to submit a Pull Request.
+    [agents]
+    # Agent-specific configurations
+    '''
+
+## License
+    MIT License
+
+## Contributing
+    Contributions are welcome! Please feel free to submit a Pull Request.

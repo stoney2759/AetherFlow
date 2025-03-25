@@ -72,7 +72,7 @@ class LoggingConfig:
         debug_mode = config.get('debug', {}).get('debug_mode', False)
         logging_config = config.get('logging', {})
         
-        # Default to DEBUG if debug_mode is True
+        # Default to INFO if debug_mode is False
         log_level = logging.DEBUG if debug_mode else logging.INFO
         
         # Override with explicit logging level if provided
@@ -82,7 +82,7 @@ class LoggingConfig:
             'WARNING': logging.WARNING,
             'ERROR': logging.ERROR
         }
-        config_level = logging_config.get('level', 'DEBUG').upper()
+        config_level = logging_config.get('level', 'INFO').upper()  # Change default to INFO
         log_level = level_map.get(config_level, log_level)
         
         # Logging format

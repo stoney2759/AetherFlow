@@ -21,7 +21,7 @@
             "write prompt",
             "create prompt"
         ],
-        "usage_count": 12,
+        "usage_count": 15,
         "success_rate": 100
     },
     "worker_agent": {
@@ -32,7 +32,42 @@
             "task",
             "operate"
         ],
-        "usage_count": 1,
-        "success_rate": 55.0
+        "usage_count": 2,
+        "success_rate": 60.0
+    },
+    "agent_creator_agent": {
+        "description": "Specializes in creating and configuring new agents",
+        "capabilities": [
+            "agent creation",
+            "code generation",
+            "specialization",
+            "agent design"
+        ],
+        "usage_count": 0,
+        "success_rate": 50.0
+    },
+    "game_dev_agent": {
+        "description": "Specializes in creating Python games and applications",
+        "capabilities": [
+            "python coding",
+            "game development",
+            "asset creation",
+            "testing",
+            "debugging"
+        ],
+        "usage_count": 0,
+        "success_rate": 50.0
+    },
+    "web_scraper_agent": {
+        "description": "Specializes in web scraping and information extraction",
+        "capabilities": [
+            "web scraping",
+            "html parsing",
+            "data extraction",
+            "content analysis",
+            "landing page creation"
+        ],
+        "usage_count": 0,
+        "success_rate": 50.0
     }
 }

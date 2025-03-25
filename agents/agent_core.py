@@ -1,6 +1,7 @@
 import logging
 from typing import Any, Dict, Optional
 from tools.llm_client import LLMClient
+from tools.tool_factory import ToolFactory
 
 class AgentCore:
     """Base class for all agents in AetherFlow."""
@@ -12,6 +13,7 @@ class AgentCore:
         self.tools = {}
         self.logger = logging.getLogger(self.name)
         self.logger.info(f"🛠️ {self.name} initialized.")
+        self.tool_factory = ToolFactory(config, llm_client)
         
     def register_tool(self, tool_name: str, tool_obj: Any):
         """Registers a tool for the agent to use."""
@@ -23,6 +25,40 @@ class AgentCore:
         if not tool:
             raise ValueError(f"Tool '{tool_name}' not found.")
         return tool.run(*args, **kwargs)
+    
+    def get_tool(self, tool_name, tool_config=None):
+        """Get or create a tool by name."""
+        tool = self.tool_factory.get_tool(tool_name, tool_config)
+        if tool:
+            self.tools[tool_name] = tool
+        return tool
+    
+    def execute_with_tools(self, task):
+        """Identifies and uses appropriate tools to complete a task."""
+        self.logger.info(f"🛠️ Executing with tools: {task}")
+        
+        # Analyze what tools are needed for this task
+        tools_analysis_prompt = f"""
+        Task: {task}
+        
+        What tools from the following list would be needed to complete this task?
+        - web_scraper: For fetching web content
+        - data_extractor: For extracting structured data from text
+        - html_generator: For creating HTML pages
+        - filesystem: For reading/writing files
+        - api: For making API calls
+        
+        Return only the tool names as a comma-separated list, no explanation.
+        """
+        
+        tools_needed = self.llm_client.generate_response(tools_analysis_prompt).strip()
+        tool_names = [name.strip() for name in tools_needed.split(',')]
+        
+        # Initialize the needed tools
+        for tool_name in tool_names:
+            self.get_tool(tool_name)
+        
+        return tool_names
     
     def think(self, task: str) -> str:
         """Processes a task and determines execution strategy."""

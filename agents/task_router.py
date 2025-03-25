@@ -184,7 +184,7 @@ class TaskRouter:
             logger.error(f"Full error details: {traceback.format_exc()}")
             return None
 
-    def route_task(self, task):
+    def route_task(self, task, max_iterations=3, is_subtask=False):
         method_start = time.time()
         logger.info(f"🚢 Routing task: {task}")
         
@@ -214,6 +214,25 @@ class TaskRouter:
                 route_time = time.time() - method_start
                 logger.debug(f"⏱️ Fallback task routing time: {route_time:.4f} seconds")
                 return fallback_response
+        
+        # Check if we should create a specialized agent even when we have a match
+        else:
+            capability_prompt = f"""
+            Analyze this task and determine if the selected agent has all required capabilities:
+            
+            Task: {refined_task}
+            Selected agent: {agent_name}
+            Capabilities: {', '.join(self.agents[agent_name].get('capabilities', []))}
+            
+            Answer only 'yes' or 'no'.
+            """
+            
+            has_all_capabilities = self.llm_client.generate_response(capability_prompt).strip().lower()
+            if 'no' in has_all_capabilities:
+                logger.info("🔍 Selected agent missing capabilities, creating specialized agent")
+                new_agent_name = self.create_specialized_agent(refined_task)
+                if new_agent_name:
+                    agent_name = new_agent_name
 
         # Fetch the actual agent instance
         agent = self.agent_manager.get_agent_instance(agent_name)
@@ -230,12 +249,47 @@ class TaskRouter:
             
             self.agent_manager.update_agent_stats(agent_name, success=True)
             
+            # If we have iterations left and this isn't already a subtask
+            if max_iterations > 1 and not is_subtask:
+                # Analyze response for subtasks
+                subtask_prompt = f"""
+                Analyze this task and response to identify any incomplete subtasks:
+                
+                Original Task: {task}
+                
+                Response from {agent_name}:
+                {response}
+                
+                Are there incomplete subtasks that need to be executed by another agent?
+                If yes, list them in bullet points. If no, respond with 'No subtasks needed'.
+                """
+                
+                subtask_analysis = self.llm_client.generate_response(subtask_prompt)
+                
+                # If there are subtasks, process them
+                if "No subtasks needed" not in subtask_analysis:
+                    logger.info(f"📋 Identified subtasks from response")
+                    
+                    # Extract subtasks
+                    subtasks = [line.strip().strip('•-*').strip() 
+                               for line in subtask_analysis.split('\n') 
+                               if line.strip().startswith(('•', '-', '*'))]
+                    
+                    for subtask in subtasks:
+                        subtask_response = self.route_task(
+                            subtask, 
+                            max_iterations=max_iterations-1, 
+                            is_subtask=True
+                        )
+                        response += f"\n\n--- Subtask: {subtask} ---\n{subtask_response}"
+            
             # Log total routing time
             route_time = time.time() - method_start
             logger.info(f"✅ Task routed successfully via {agent_name}")
             logger.debug(f"⏱️ Total task routing time: {route_time:.4f} seconds")
             
             return response
+            
         except Exception as e:
             logger.error(f"⚠️ Agent execution failed: {e}")
             self.agent_manager.update_agent_stats(agent_name, success=False)

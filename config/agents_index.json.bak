@@ -1,0 +1,38 @@
+{
+    "planning_agent": {
+        "description": "Expert at planning and breaking tasks into steps",
+        "capabilities": [
+            "planning",
+            "task decomposition",
+            "workflow",
+            "organization"
+        ],
+        "usage_count": 4,
+        "success_rate": 70.0
+    },
+    "prompt_generator_agent": {
+        "description": "Auto-detected PromptGeneratorAgent",
+        "capabilities": [
+            "refine",
+            "prompt",
+            "structure",
+            "clarify",
+            "prompt engineering",
+            "write prompt",
+            "create prompt"
+        ],
+        "usage_count": 15,
+        "success_rate": 100
+    },
+    "worker_agent": {
+        "description": "Auto-detected WorkerAgent",
+        "capabilities": [
+            "execute",
+            "general",
+            "task",
+            "operate"
+        ],
+        "usage_count": 2,
+        "success_rate": 60.0
+    }
+}

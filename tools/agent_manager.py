@@ -1,3 +1,5 @@
+# tools/agent_manager.py - Updated version
+
 import os
 import json
 import logging
@@ -27,6 +29,7 @@ class AgentManager:
         self.ensure_directories_exist()
         self.ensure_index_exists()
         self.agents = self.load_agents()  # ✅ Ensure agents are only loaded once
+        self.scan_and_append_agents()  # Scan for new agents at initialization
 
     def ensure_directories_exist(self):
         """Ensures required agent directories exist."""
@@ -69,9 +72,24 @@ class AgentManager:
             return
             
         try:
+            # Make a backup of the existing file first
+            if os.path.exists(self.index_file):
+                backup_file = f"{self.index_file}.bak"
+                try:
+                    with open(self.index_file, "r", encoding="utf-8") as src:
+                        with open(backup_file, "w", encoding="utf-8") as dst:
+                            dst.write(src.read())
+                except Exception as backup_error:
+                    logging.warning(f"⚠️ Failed to create backup: {backup_error}")
+            
+            # Write the new data
             with open(self.index_file, "w", encoding="utf-8") as f:
                 json.dump(agents, f, indent=4, ensure_ascii=False)
             logging.info("✅ Agents index updated successfully.")
+            
+            # Update our internal copy
+            self.agents = agents
+            
         except Exception as e:
             logging.error(f"⚠️ Failed to save agents_index.json: {e}")
 
@@ -110,22 +128,54 @@ class AgentManager:
         agents = self.load_agents()
         detected_agents = {}
 
+        # Define common agent suffixes to look for
+        agent_suffixes = ["_agent.py", "agent.py"]
+
         # ✅ Scan both 'agents/' and 'dynamic_agents/' directories
         for agent_dir in [self.agents_directory, self.dynamic_agents_directory]:
             if not os.path.exists(agent_dir):
                 continue  # Skip if directory doesn't exist (but should never happen now)
 
             for filename in os.listdir(agent_dir):
-                if filename.endswith("_agent.py"):
-                    agent_name = filename[:-3]  # Remove .py extension
-                    if agent_name not in agents:
-                        detected_agents[agent_name] = {
-                            "description": f"Auto-detected {agent_name}",
-                            "capabilities": [],
-                            "usage_count": 0,
-                            "success_rate": 50.0  # Default success rate
-                        }
-                        logging.info(f"📌 New agent detected: {agent_name}")
+                # Check if file is a Python file that looks like an agent
+                is_agent = False
+                agent_name = None
+                
+                for suffix in agent_suffixes:
+                    if filename.lower().endswith(suffix):
+                        is_agent = True
+                        agent_name = filename[:-3]  # Remove .py extension
+                        break
+                
+                if is_agent and agent_name and agent_name not in agents:
+                    detected_agents[agent_name] = {
+                        "description": f"Auto-detected {agent_name}",
+                        "capabilities": [],
+                        "usage_count": 0,
+                        "success_rate": 50.0  # Default success rate
+                    }
+                    logging.info(f"📌 New agent detected: {agent_name}")
+
+                    # Try to extract metadata immediately for better descriptions
+                    try:
+                        module_path = f"{agent_dir.replace('/', '.')}.{agent_name}"
+                        module = importlib.import_module(module_path)
+                        
+                        # Find the agent class
+                        class_name = "".join(word.capitalize() for word in agent_name.split("_"))
+                        if not class_name.endswith("Agent"):
+                            class_name += "Agent"
+                            
+                        agent_class = getattr(module, class_name, None)
+                        if agent_class:
+                            metadata = self.extract_agent_metadata(agent_class)
+                            if metadata.get("description"):
+                                detected_agents[agent_name]["description"] = metadata.get("description")
+                            if metadata.get("capabilities"):
+                                detected_agents[agent_name]["capabilities"] = metadata.get("capabilities")
+                    except Exception as e:
+                        if DEBUG_MODE:
+                            logging.debug(f"Could not extract metadata for {agent_name}: {e}")
 
         if detected_agents:
             agents.update(detected_agents)
@@ -215,7 +265,7 @@ class AgentManager:
             )
             
             # Save to file
-            file_path = os.path.join(self.dynamic_agents_directory, f"{agent_name}_agent.py")
+            file_path = os.path.join(self.dynamic_agents_directory, f"{agent_name}.py")
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(agent_template)
             logging.info(f"✅ Successfully created agent file: {file_path}")
@@ -230,10 +280,10 @@ class AgentManager:
             }
             self.save_agents(agents)
             
-            # Optional: Reload agents to ensure consistency
+            # Reload agents to ensure consistency
             self.agents = self.load_agents()
             
-            return f"✨ Created new agent: {agent_name}_agent.py"
+            return f"✨ Created new agent: {agent_name}.py"
         except Exception as e:
             logging.error(f"❌ Failed to create agent {agent_name}: {e}")
             return f"⚠️ Error creating agent: {str(e)}"

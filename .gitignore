@@ -5,6 +5,9 @@ logs/
 config/config.toml
 sensitive-files.txt
 
+output/
+workspace/
+
 # Python
 # Exclude __init__.py files if needed
 __init__.py

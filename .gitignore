@@ -1,13 +1,3 @@
-# Log files
-logs/
-
-# Config files
-config/config.toml
-sensitive-files.txt
-
-output/
-workspace/
-
 # Python
 # Exclude __init__.py files if needed
 __init__.py
@@ -44,3 +34,76 @@ env/
 *.swp
 *.swo
 .DS_Store
+
+# Workspace folder
+.workspace/
+workspace/
+**/workspace/
+**/.workspace/
+
+# Miscellaneous
+*.log
+.tmp/
+
+# Log files
+logs/
+
+# Config files
+config/config.toml
+sensitive-files.txt
+
+# Additional output and workspace directories
+output/
+workspace/
+
+# Backup files
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
+
+# System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary files
+*.swp
+*.swo
+*~
+.~lock.*#
+
+# Compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment files
+.env
+.venv
+
+# Package management
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
